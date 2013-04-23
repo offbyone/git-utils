@@ -65,13 +65,13 @@ def run_command(command)
 end
 
 def commits_between from, to
-  commits = run_command(%{ git log --pretty=format:"%h-%ae-%s" #{from}..#{to} }).split(/[\r\n]+/).map do |raw_commit|
-    raw_commit_parts = raw_commit.split('-')
+  commits = run_command(%{ git log --pretty=format:"%h|%ae|%s" #{from}..#{to} }).split(/[\r\n]+/).map do |raw_commit|
+    raw_commit_parts = raw_commit.split('|')
 
     {
       :hash    => raw_commit_parts.shift,
       :author  => raw_commit_parts.shift.split('@').first,
-      :message => raw_commit_parts.join('-')
+      :message => raw_commit_parts.join('|')
     }
   end
   
@@ -95,7 +95,7 @@ current_branch = run_command("git branch").split("\n").detect { |l| l[0,1] == '*
 
 $branches = run_command("git for-each-ref refs/heads").split("\n").inject({}) do |hash, line|
   parts   = line.split(' ')
-  name    = parts.last.split('/').last
+  name    = parts.last.split('/')[2..-1].join('/')
   rev     = parts.first
   current = (name == current_branch)
   version = $config["version_branches"].include?(name)
