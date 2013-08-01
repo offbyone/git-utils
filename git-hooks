@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright (c) 2010-2012, Benjamin C. Meyer <ben@meyerhome.net>
 # All rights reserved.
@@ -100,7 +100,7 @@ function install_hooks
         mv hooks hooks.old
         mkdir hooks
         cd hooks
-        for file in applypatch-msg commit-msg post-applypatch post-checkout post-commit post-merge post-receive pre-applypatch pre-auto-gc pre-commit prepare-commit-msg pre-rebase pre-receive update
+        for file in applypatch-msg commit-msg post-applypatch post-checkout post-commit post-merge post-receive pre-applypatch pre-auto-gc pre-commit prepare-commit-msg pre-rebase pre-receive pre-push update
         do
             echo '#!/bin/bash
 git-hooks run "$0" "$@"' > "${file}"
@@ -155,6 +155,8 @@ case $1 in
         run_hook "$@"
         ;;
     --install|--uninstall )
+        # FIXME don't ship with set -x
+        set -x
         install_hooks "$1"
         ;;
     -h|--help|-? )
