@@ -155,8 +155,6 @@ case $1 in
         run_hook "$@"
         ;;
     --install|--uninstall )
-        # FIXME don't ship with set -x
-        set -x
         install_hooks "$1"
         ;;
     -h|--help|-? )
